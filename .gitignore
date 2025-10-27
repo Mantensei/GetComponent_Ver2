@@ -1,0 +1,62 @@
+# =======================
+# Unity generated folders
+# =======================
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Bb]uilds/
+[Ll]ogs/
+[Uu]ser[Ss]ettings/
+[Mm]emoryCaptures/
+[Rr]ecordings/
+
+# =======================
+# Visual Studio / JetBrains / IDE
+# =======================
+.vs/
+.vscode/
+.idea/
+*.csproj
+*.sln
+*.suo
+*.user
+*.unityproj
+*.tmp
+*.pidb
+*.booproj
+
+# =======================
+# OS / Editor generated
+# =======================
+.DS_Store
+Thumbs.db
+*.swp
+*.bak
+*.old
+*.orig
+
+# =======================
+# Unity packages / exports / builds
+# =======================
+*.unitypackage
+*.apk
+*.aab
+*.app
+*.exe
+*.zip
+
+# =======================
+# Crash / system reports
+# =======================
+sysinfo.txt
+
+# =======================
+# Addressables build data
+# =======================
+/[Aa]ssets/[Aa]ddressable[Aa]ssets[Dd]ata/*/*.bin*
+
+# =======================
+# External assets (excluded manually)
+# =======================
+Assets/MantenseiLib/Art/
