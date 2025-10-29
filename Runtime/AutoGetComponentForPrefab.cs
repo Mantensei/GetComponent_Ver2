@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace MantenseiLib
+namespace MantenseiLib.GetComponent
 {
     /// <summary>
     /// プレハブに自動追加されるコンポーネント

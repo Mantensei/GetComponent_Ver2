@@ -4,7 +4,7 @@ using UnityEngine;
 using System.Linq;
 using System.Collections.Generic;
 
-namespace MantenseiLib
+namespace MantenseiLib.GetComponent
 {
     public static class GetComponentUtility
     {

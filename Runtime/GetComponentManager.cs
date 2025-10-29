@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace MantenseiLib.Internal
+namespace MantenseiLib.GetComponent
 {
     public class GetComponentManager : MonoBehaviour
     {

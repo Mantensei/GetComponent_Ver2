@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace MantenseiLib.Editor
+namespace MantenseiLib.GetComponent.Editor
 {
     public class GetComponentPrefabManagerWindow : EditorWindow
     {
