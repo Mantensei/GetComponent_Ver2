@@ -2,6 +2,9 @@ using System;
 
 namespace MantenseiLib
 {
+    /// <summary>
+    /// 
+    /// </summary>
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
     public class GetComponentAttribute : Attribute
     {
@@ -14,6 +17,9 @@ namespace MantenseiLib
         public GetComponentAttribute(HierarchyRelation relation) { this.relation = relation; }
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
     public class GetComponentsAttribute : GetComponentAttribute
     {
@@ -23,6 +29,9 @@ namespace MantenseiLib
         public override QuantityType quantity => QuantityType.Multiple;
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
     public class AddComponentAttribute : GetComponentAttribute
     {
