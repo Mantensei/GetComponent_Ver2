@@ -1,12 +1,12 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace MantenseiLib.GetComponent
 {
     /// <summary>
-    /// ƒvƒŒƒnƒu‚É©“®’Ç‰Á‚³‚ê‚éƒRƒ“ƒ|[ƒlƒ“ƒg
-    /// Awake‚É©g‚ÌƒQ[ƒ€ƒIƒuƒWƒFƒNƒg‚É”z’u‚³‚ê‚Ä‚¢‚é‘S‚Ä‚ÌMonoBehaviour‚É‘Î‚µ‚ÄGetOrAddComponent‚ğÀs
+    /// ãƒ—ãƒ¬ãƒãƒ–ã«è‡ªå‹•è¿½åŠ ã•ã‚Œã‚‹ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆ
+    /// Awakeæ™‚ã«è‡ªèº«ã®ã‚²ãƒ¼ãƒ ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã«é…ç½®ã•ã‚Œã¦ã„ã‚‹å…¨ã¦ã®MonoBehaviourã«å¯¾ã—ã¦GetOrAddComponentã‚’å®Ÿè¡Œ
     /// </summary>
     public class AutoGetComponentForPrefab : MonoBehaviour
     {
@@ -19,7 +19,7 @@ namespace MantenseiLib.GetComponent
 
         private void ProcessAllComponents()
         {
-            // ©g‚ÌƒQ[ƒ€ƒIƒuƒWƒFƒNƒg‚Æ‚»‚ÌqƒIƒuƒWƒFƒNƒg‚Ì‘S‚Ä‚ÌMonoBehaviour‚ğæ“¾
+            // è‡ªèº«ã®ã‚²ãƒ¼ãƒ ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã¨ãã®å­ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®å…¨ã¦ã®MonoBehaviourã‚’å–å¾—
             var monoBehaviours = GetComponentsInChildren<MonoBehaviour>(true);
 
             if (_debugMode)
@@ -29,10 +29,10 @@ namespace MantenseiLib.GetComponent
 
             foreach (var monoBehaviour in monoBehaviours)
             {
-                // ©•ª©g‚ÍœŠO
+                // è‡ªåˆ†è‡ªèº«ã¯é™¤å¤–
                 if (monoBehaviour == this) continue;
 
-                // nullƒ`ƒFƒbƒNi”j‰ó‚³‚ê‚½ƒRƒ“ƒ|[ƒlƒ“ƒg‚ğœŠOj
+                // nullãƒã‚§ãƒƒã‚¯ï¼ˆç ´å£Šã•ã‚ŒãŸã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆã‚’é™¤å¤–ï¼‰
                 if (monoBehaviour == null) continue;
 
                 try
@@ -52,7 +52,7 @@ namespace MantenseiLib.GetComponent
         }
 
         /// <summary>
-        /// è“®‚ÅƒRƒ“ƒ|[ƒlƒ“ƒgˆ—‚ğÀsiƒfƒoƒbƒO—pj
+        /// æ‰‹å‹•ã§ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆå‡¦ç†ã‚’å®Ÿè¡Œï¼ˆãƒ‡ãƒãƒƒã‚°ç”¨ï¼‰
         /// </summary>
         [ContextMenu("Process All Components")]
         public void ProcessAllComponentsManual()

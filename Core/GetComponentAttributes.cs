@@ -1,7 +1,8 @@
-using System;
+ï»¿using System;
 
 namespace MantenseiLib
 {
+    
     /// <summary>
     /// 
     /// </summary>
@@ -39,9 +40,9 @@ namespace MantenseiLib
     }
 
     /// <summary>
-    /// eƒIƒuƒWƒFƒNƒg‚Ö‚ÌQÆ‚ğ–¾¦“I‚Éƒ}[ƒN‚·‚é‘®«
-    /// [GetComponent(HierarchyRelation.Parent)] ‚Æ“¯“™
-    /// 1ƒRƒ“ƒ|[ƒlƒ“ƒg‚É‚Â‚«1‚Â‚¾‚¯‹–‰Â‚³‚ê‚é
+    /// è¦ªã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã¸ã®å‚ç…§ã‚’æ˜ç¤ºçš„ã«ãƒãƒ¼ã‚¯ã™ã‚‹å±æ€§
+    /// [GetComponent(HierarchyRelation.Parent)] ã¨åŒç­‰
+    /// 1ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆã«ã¤ã1ã¤ã ã‘è¨±å¯ã•ã‚Œã‚‹
     /// </summary>
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
     public class OwnerAttribute : Attribute
@@ -50,8 +51,8 @@ namespace MantenseiLib
     }
 
     /// <summary>
-    /// Owner”z‰º‚ÌƒRƒ“ƒ|[ƒlƒ“ƒg‚ğ1‚Âæ“¾‚·‚é‘®«
-    /// Owner.GetComponent() ‚Æ Owner.GetComponentInChildren() ‚Ì—¼•û‚ğ’TõiSelf | Childrenj
+    /// Owneré…ä¸‹ã®ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆã‚’1ã¤å–å¾—ã™ã‚‹å±æ€§
+    /// Owner.GetComponent() ã¨ Owner.GetComponentInChildren() ã®ä¸¡æ–¹ã‚’æ¢ç´¢ï¼ˆSelf | Childrenï¼‰
     /// </summary>
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
     public class OwnedComponentAttribute : Attribute
@@ -60,8 +61,8 @@ namespace MantenseiLib
     }
 
     /// <summary>
-    /// Owner”z‰º‚ÌƒRƒ“ƒ|[ƒlƒ“ƒg‚ğ•¡”æ“¾‚·‚é‘®«i”z—ñ”Åj
-    /// Owner.GetComponents() ‚Æ Owner.GetComponentsInChildren() ‚Ì—¼•û‚ğ’TõiSelf | Childrenj
+    /// Owneré…ä¸‹ã®ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆã‚’è¤‡æ•°å–å¾—ã™ã‚‹å±æ€§ï¼ˆé…åˆ—ç‰ˆï¼‰
+    /// Owner.GetComponents() ã¨ Owner.GetComponentsInChildren() ã®ä¸¡æ–¹ã‚’æ¢ç´¢ï¼ˆSelf | Childrenï¼‰
     /// </summary>
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
     public class OwnedComponentsAttribute : Attribute

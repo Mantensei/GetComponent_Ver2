@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using System.Reflection;
 using UnityEngine;
 using System.Linq;
@@ -9,10 +9,10 @@ namespace MantenseiLib.GetComponent
     public static class GetComponentUtility
     {
         /// <summary>
-        /// 3’iŠK‚ÅƒRƒ“ƒ|[ƒlƒ“ƒg‚ğæ“¾Eİ’è‚·‚é
-        /// Phase 1: [Owner] ‚Ìæ“¾
-        /// Phase 2: [OwnedComponent/Components] ‚Ìæ“¾
-        /// Phase 3: ‚»‚Ì‘¼‚Ì‘®«‚Ìæ“¾
+        /// 3æ®µéšã§ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆã‚’å–å¾—ãƒ»è¨­å®šã™ã‚‹
+        /// Phase 1: [Owner] ã®å–å¾—
+        /// Phase 2: [OwnedComponent/Components] ã®å–å¾—
+        /// Phase 3: ãã®ä»–ã®å±æ€§ã®å–å¾—
         /// </summary>
         public static void GetOrAddComponent(MonoBehaviour monoBehaviour)
         {
@@ -23,13 +23,13 @@ namespace MantenseiLib.GetComponent
                 var properties = type.GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
                 var members = fields.Cast<MemberInfo>().Concat(properties.Cast<MemberInfo>()).ToList();
 
-                // Phase 1: [Owner] ‚Ìæ“¾
+                // Phase 1: [Owner] ã®å–å¾—
                 ProcessOwnerAttributes(monoBehaviour, members);
 
-                // Phase 2: [OwnedComponent/Components] ‚Ìæ“¾
+                // Phase 2: [OwnedComponent/Components] ã®å–å¾—
                 ProcessOwnedComponentAttributes(monoBehaviour, members);
 
-                // Phase 3: ‚»‚Ì‘¼‚Ì‘®«‚Ìæ“¾
+                // Phase 3: ãã®ä»–ã®å±æ€§ã®å–å¾—
                 ProcessStandardAttributes(monoBehaviour, members);
             }
             catch (Exception ex)
@@ -42,7 +42,7 @@ namespace MantenseiLib.GetComponent
         {
             var ownerMembers = members.Where(m => m.GetCustomAttribute<OwnerAttribute>() != null).ToList();
 
-            // •¡”‚Ì[Owner]‚ª‚ ‚éê‡‚ÍŒx
+            // è¤‡æ•°ã®[Owner]ãŒã‚ã‚‹å ´åˆã¯è­¦å‘Š
             if (ownerMembers.Count > 1)
             {
                 Debug.LogError($"[Owner] attribute found multiple times in '{monoBehaviour.GetType().Name}' on '{monoBehaviour.name}'. Only one [Owner] is allowed per component.");
@@ -55,7 +55,7 @@ namespace MantenseiLib.GetComponent
                 {
                     Type componentType = memberInfo.GetMemberType();
 
-                    // e‚©‚çæ“¾iHierarchyRelation.Parent ‚Æ“¯“™j
+                    // è¦ªã‹ã‚‰å–å¾—ï¼ˆHierarchyRelation.Parent ã¨åŒç­‰ï¼‰
                     object component = monoBehaviour.transform.parent?.GetComponentInParent(componentType);
 
                     if (component != null)
@@ -75,14 +75,14 @@ namespace MantenseiLib.GetComponent
             var ownerMember = members.FirstOrDefault(m => m.GetCustomAttribute<OwnerAttribute>() != null);
             if (ownerMember == null)
             {
-                // [Owner]‚ª‚È‚¢ê‡A[OwnedComponent]Œn‚Íˆ—‚µ‚È‚¢
+                // [Owner]ãŒãªã„å ´åˆã€[OwnedComponent]ç³»ã¯å‡¦ç†ã—ãªã„
                 return;
             }
 
             object ownerValue = GetMemberValue(monoBehaviour, ownerMember);
             if (ownerValue == null)
             {
-                // Owner‚ªnull‚Ìê‡A[OwnedComponent]Œn‚ÍƒXƒLƒbƒv
+                // OwnerãŒnullã®å ´åˆã€[OwnedComponent]ç³»ã¯ã‚¹ã‚­ãƒƒãƒ—
                 return;
             }
 
@@ -94,10 +94,10 @@ namespace MantenseiLib.GetComponent
 
             GameObject ownerGameObject = ownerComponent.gameObject;
 
-            // [OwnedComponent] (’Pˆê)
+            // [OwnedComponent] (å˜ä¸€)
             ProcessOwnedComponentSingle(monoBehaviour, members, ownerGameObject);
 
-            // [OwnedComponents] (•¡”)
+            // [OwnedComponents] (è¤‡æ•°)
             ProcessOwnedComponentMultiple(monoBehaviour, members, ownerGameObject);
         }
 
@@ -111,10 +111,10 @@ namespace MantenseiLib.GetComponent
                 {
                     Type componentType = memberInfo.GetMemberType();
 
-                    // Owner©giSelfj‚©‚ç‚Ü‚¸’T‚·
+                    // Ownerè‡ªèº«ï¼ˆSelfï¼‰ã‹ã‚‰ã¾ãšæ¢ã™
                     object component = ownerGameObject.GetComponent(componentType);
 
-                    // ‚È‚¯‚ê‚ÎqŠK‘wiChildrenj‚©‚ç’T‚·
+                    // ãªã‘ã‚Œã°å­éšå±¤ï¼ˆChildrenï¼‰ã‹ã‚‰æ¢ã™
                     if (component == null)
                     {
                         component = ownerGameObject.GetComponentInChildren(componentType);
@@ -143,7 +143,7 @@ namespace MantenseiLib.GetComponent
                     Type componentType = memberInfo.GetMemberType();
                     Type elementType = componentType.IsArray ? componentType.GetElementType() : componentType;
 
-                    // Owner©giSelfj‚ÆqŠK‘wiChildrenj‚Ì—¼•û‚©‚çæ“¾
+                    // Ownerè‡ªèº«ï¼ˆSelfï¼‰ã¨å­éšå±¤ï¼ˆChildrenï¼‰ã®ä¸¡æ–¹ã‹ã‚‰å–å¾—
                     List<Component> componentList = new List<Component>();
 
                     // Self
@@ -152,10 +152,10 @@ namespace MantenseiLib.GetComponent
                     // Children
                     componentList.AddRange(ownerGameObject.GetComponentsInChildren(elementType));
 
-                    // d•¡‚ğœ‹
+                    // é‡è¤‡ã‚’é™¤å»
                     componentList = componentList.Distinct().ToList();
 
-                    // ”z—ñ‚É•ÏŠ·‚µ‚Äİ’è
+                    // é…åˆ—ã«å¤‰æ›ã—ã¦è¨­å®š
                     Array componentsArray = Array.CreateInstance(elementType, componentList.Count);
                     componentList.ToArray().CopyTo(componentsArray, 0);
 
@@ -170,7 +170,7 @@ namespace MantenseiLib.GetComponent
 
         private static void ProcessStandardAttributes(MonoBehaviour monoBehaviour, List<MemberInfo> members)
         {
-            // [Owner]A[OwnedComponent]A[OwnedComponents] ˆÈŠO‚Ì‘®«‚ğˆ—
+            // [Owner]ã€[OwnedComponent]ã€[OwnedComponents] ä»¥å¤–ã®å±æ€§ã‚’å‡¦ç†
             var standardMembers = members.Where(m =>
             {
                 var hasOwner = m.GetCustomAttribute<OwnerAttribute>() != null;
