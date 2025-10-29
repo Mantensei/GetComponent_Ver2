@@ -8,7 +8,7 @@ namespace MantenseiLib
     /// プレハブに自動追加されるコンポーネント
     /// Awake時に自身のゲームオブジェクトに配置されている全てのMonoBehaviourに対してGetOrAddComponentを実行
     /// </summary>
-    public class GetComponentAutoInitializer : MonoBehaviour
+    public class AutoGetComponentForPrefab : MonoBehaviour
     {
         [SerializeField] private bool _debugMode = false;
 
