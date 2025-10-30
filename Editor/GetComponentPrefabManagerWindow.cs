@@ -11,7 +11,7 @@ namespace MantenseiLib.GetComponent.Editor
         private Vector2 _scrollPosition;
         private List<PrefabInfo> _prefabs = new List<PrefabInfo>();
 
-        [MenuItem("Tools/MantenseiLib/GetComponent Prefab Manager #%&G")]
+        [MenuItem("Tools/Mantensei/GetComponent Prefab Manager #%&G")]
         public static void ShowWindow()
         {
             var window = GetWindow<GetComponentPrefabManagerWindow>("GetComponent Prefab Manager");
