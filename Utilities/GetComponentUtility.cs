@@ -43,11 +43,9 @@ namespace MantenseiLib.GetComponent
         {
             var ownerMembers = members.Where(m => m.GetCustomAttribute<OwnerAttribute>() != null).ToList();
 
-            // 複数の[Owner]がある場合は警告
             if (ownerMembers.Count > 1)
             {
-                Debug.LogError($"[Owner] attribute found multiple times in '{monoBehaviour.GetType().Name}' on '{monoBehaviour.name}'. Only one [Owner] is allowed per component.");
-                return;
+                Debug.LogWarning($"[Owner] attribute found multiple times in '{monoBehaviour.GetType().Name}' on '{monoBehaviour.name}'. Using the first one.");
             }
 
             foreach (var memberInfo in ownerMembers)
@@ -195,6 +193,7 @@ namespace MantenseiLib.GetComponent
                 var attribute = memberInfo.GetCustomAttribute<GetComponentAttribute>();
                 if (attribute == null) continue;
 
+                // 修正後
                 try
                 {
                     object component = null;
@@ -210,9 +209,21 @@ namespace MantenseiLib.GetComponent
                             break;
                     }
 
-                    if (Exists(component))
+                    // 単一コンポーネントの場合
+                    if (attribute.quantity == QuantityType.Single)
                     {
-                        SetComponent(monoBehaviour, memberInfo, component);
+                        if (Exists(component))
+                        {
+                            SetComponent(monoBehaviour, memberInfo, component);
+                        }
+                    }
+                    // 配列の場合
+                    else if (attribute.quantity == QuantityType.Multiple)
+                    {
+                        if (component is Array array && array.Length > 0)
+                        {
+                            SetComponent(monoBehaviour, memberInfo, component);
+                        }
                     }
                 }
                 catch (Exception ex)
