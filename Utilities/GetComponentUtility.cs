@@ -210,7 +210,7 @@ namespace MantenseiLib.GetComponent
                             break;
                     }
 
-                    if (component != null)
+                    if (Exists(component))
                     {
                         SetComponent(monoBehaviour, memberInfo, component);
                     }
@@ -237,7 +237,7 @@ namespace MantenseiLib.GetComponent
                     if (relation != HierarchyRelation.None && relations.HasFlag(relation))
                     {
                         components = GetComponentByRelation(obj, elementType, relation, quantity);
-                        if (components as UnityEngine.Object != null)
+                        if (Exists(components))
                         {
                             break;
                         }
@@ -290,7 +290,7 @@ namespace MantenseiLib.GetComponent
                         foreach (Transform child in obj.transform)
                         {
                             var component = child.GetComponentInChildren(elementType);
-                            if (component != null) return component;
+                            if (Exists(component)) return component;
                         }
                         return null;
                     }
