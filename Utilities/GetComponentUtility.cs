@@ -3,6 +3,7 @@ using System.Reflection;
 using UnityEngine;
 using System.Linq;
 using System.Collections.Generic;
+using Object = UnityEngine.Object;
 
 namespace MantenseiLib.GetComponent
 {
@@ -58,7 +59,7 @@ namespace MantenseiLib.GetComponent
                     // 親から取得（HierarchyRelation.Parent と同等）
                     object component = monoBehaviour.transform.parent?.GetComponentInParent(componentType);
 
-                    if (component != null)
+                    if (Exists(component))
                     {
                         SetComponent(monoBehaviour, memberInfo, component);
                     }
@@ -75,20 +76,28 @@ namespace MantenseiLib.GetComponent
             var ownerMember = members.FirstOrDefault(m => m.GetCustomAttribute<OwnerAttribute>() != null);
             if (ownerMember == null)
             {
-                // [Owner]がない場合、[OwnedComponent]系は処理しない
                 return;
             }
 
             object ownerValue = GetMemberValue(monoBehaviour, ownerMember);
-            if (ownerValue == null)
+            if (!Exists(ownerValue))
             {
-                // Ownerがnullの場合、[OwnedComponent]系はスキップ
                 return;
             }
 
             Component ownerComponent = ownerValue as Component;
-            if (ownerComponent == null)
+
+            // インターフェイス型の場合も対応
+            if (!Exists(ownerComponent) && Exists(ownerValue))
             {
+                // GetComponent<T>()でインターフェイスを取得した場合、
+                // 返り値はインターフェイス型だが実体はMonoBehaviourなので変換を試みる
+                ownerComponent = ownerValue as MonoBehaviour;
+            }
+
+            if (!Exists(ownerComponent))
+            {
+                Debug.LogWarning($"[Owner] value in '{monoBehaviour.GetType().Name}' on '{monoBehaviour.name}' is not a Component. OwnedComponent attributes will be skipped.");
                 return;
             }
 
@@ -115,12 +124,12 @@ namespace MantenseiLib.GetComponent
                     object component = ownerGameObject.GetComponent(componentType);
 
                     // なければ子階層（Children）から探す
-                    if (component == null)
+                    if (!Exists(component))
                     {
                         component = ownerGameObject.GetComponentInChildren(componentType);
                     }
 
-                    if (component != null)
+                    if (Exists(component))
                     {
                         SetComponent(monoBehaviour, memberInfo, component);
                     }
@@ -258,7 +267,7 @@ namespace MantenseiLib.GetComponent
                 {
                     componentList = componentList.Distinct().ToList();
                     Array componentsArray = Array.CreateInstance(elementType, componentList.Count);
-                    componentList.Distinct().ToArray().CopyTo(componentsArray, 0);
+                    componentList.ToArray().CopyTo(componentsArray, 0);
 
                     components = componentsArray;
                 }
@@ -382,6 +391,12 @@ namespace MantenseiLib.GetComponent
                 return propertyInfo.PropertyType;
             }
             return null;
+        }
+
+        // UnityEngine.Objectの安全なnullチェック
+        static bool Exists(object obj)
+        {
+            return obj as Object != null;
         }
     }
 }
