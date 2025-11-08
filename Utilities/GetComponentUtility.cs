@@ -11,8 +11,8 @@ namespace MantenseiLib.GetComponent
     {
         /// <summary>
         /// 3段階でコンポーネントを取得・設定する
-        /// Phase 1: [Owner] の取得
-        /// Phase 2: [OwnedComponent/Components] の取得
+        /// Phase 1: [parent] の取得
+        /// Phase 2: [Sibling/Components] の取得
         /// Phase 3: その他の属性の取得
         /// </summary>
         public static void GetOrAddComponent(MonoBehaviour monoBehaviour)
@@ -24,11 +24,11 @@ namespace MantenseiLib.GetComponent
                 var properties = type.GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
                 var members = fields.Cast<MemberInfo>().Concat(properties.Cast<MemberInfo>()).ToList();
 
-                // Phase 1: [Owner] の取得
-                ProcessOwnerAttributes(monoBehaviour, members);
+                // Phase 1: [parent] の取得
+                ProcessparentAttributes(monoBehaviour, members);
 
-                // Phase 2: [OwnedComponent/Components] の取得
-                ProcessOwnedComponentAttributes(monoBehaviour, members);
+                // Phase 2: [Sibling/Components] の取得
+                ProcessSiblingAttributes(monoBehaviour, members);
 
                 // Phase 3: その他の属性の取得
                 ProcessStandardAttributes(monoBehaviour, members);
@@ -39,16 +39,16 @@ namespace MantenseiLib.GetComponent
             }
         }
 
-        private static void ProcessOwnerAttributes(MonoBehaviour monoBehaviour, List<MemberInfo> members)
+        private static void ProcessparentAttributes(MonoBehaviour monoBehaviour, List<MemberInfo> members)
         {
-            var ownerMembers = members.Where(m => m.GetCustomAttribute<OwnerAttribute>() != null).ToList();
+            var parentMembers = members.Where(m => m.GetCustomAttribute<ParentAttribute>() != null).ToList();
 
-            if (ownerMembers.Count > 1)
+            if (parentMembers.Count > 1)
             {
-                Debug.LogWarning($"[Owner] attribute found multiple times in '{monoBehaviour.GetType().Name}' on '{monoBehaviour.name}'. Using the first one.");
+                Debug.LogWarning($"[parent] attribute found multiple times in '{monoBehaviour.GetType().Name}' on '{monoBehaviour.name}'. Using the first one.");
             }
 
-            foreach (var memberInfo in ownerMembers)
+            foreach (var memberInfo in parentMembers)
             {
                 try
                 {
@@ -64,53 +64,53 @@ namespace MantenseiLib.GetComponent
                 }
                 catch (Exception ex)
                 {
-                    Debug.LogError($"Error processing [Owner] member '{memberInfo.Name}' in '{monoBehaviour.GetType().Name}' on '{monoBehaviour.name}': {ex.Message}");
+                    Debug.LogError($"Error processing [parent] member '{memberInfo.Name}' in '{monoBehaviour.GetType().Name}' on '{monoBehaviour.name}': {ex.Message}");
                 }
             }
         }
 
-        private static void ProcessOwnedComponentAttributes(MonoBehaviour monoBehaviour, List<MemberInfo> members)
+        private static void ProcessSiblingAttributes(MonoBehaviour monoBehaviour, List<MemberInfo> members)
         {
-            var ownerMember = members.FirstOrDefault(m => m.GetCustomAttribute<OwnerAttribute>() != null);
-            if (ownerMember == null)
+            var parentMember = members.FirstOrDefault(m => m.GetCustomAttribute<ParentAttribute>() != null);
+            if (parentMember == null)
             {
                 return;
             }
 
-            object ownerValue = GetMemberValue(monoBehaviour, ownerMember);
-            if (!Exists(ownerValue))
+            object parentValue = GetMemberValue(monoBehaviour, parentMember);
+            if (!Exists(parentValue))
             {
                 return;
             }
 
-            Component ownerComponent = ownerValue as Component;
+            Component parentComponent = parentValue as Component;
 
             // インターフェイス型の場合も対応
-            if (!Exists(ownerComponent) && Exists(ownerValue))
+            if (!Exists(parentComponent) && Exists(parentValue))
             {
                 // GetComponent<T>()でインターフェイスを取得した場合、
                 // 返り値はインターフェイス型だが実体はMonoBehaviourなので変換を試みる
-                ownerComponent = ownerValue as MonoBehaviour;
+                parentComponent = parentValue as MonoBehaviour;
             }
 
-            if (!Exists(ownerComponent))
+            if (!Exists(parentComponent))
             {
-                Debug.LogWarning($"[Owner] value in '{monoBehaviour.GetType().Name}' on '{monoBehaviour.name}' is not a Component. OwnedComponent attributes will be skipped.");
+                Debug.LogWarning($"[parent] value in '{monoBehaviour.GetType().Name}' on '{monoBehaviour.name}' is not a Component. Sibling attributes will be skipped.");
                 return;
             }
 
-            GameObject ownerGameObject = ownerComponent.gameObject;
+            GameObject parentGameObject = parentComponent.gameObject;
 
-            // [OwnedComponent] (単一)
-            ProcessOwnedComponentSingle(monoBehaviour, members, ownerGameObject);
+            // [Sibling] (単一)
+            ProcessSiblingSingle(monoBehaviour, members, parentGameObject);
 
-            // [OwnedComponents] (複数)
-            ProcessOwnedComponentMultiple(monoBehaviour, members, ownerGameObject);
+            // [Siblings] (複数)
+            ProcessSiblingMultiple(monoBehaviour, members, parentGameObject);
         }
 
-        private static void ProcessOwnedComponentSingle(MonoBehaviour monoBehaviour, List<MemberInfo> members, GameObject ownerGameObject)
+        private static void ProcessSiblingSingle(MonoBehaviour monoBehaviour, List<MemberInfo> members, GameObject parentGameObject)
         {
-            var ownedMembers = members.Where(m => m.GetCustomAttribute<OwnedComponentAttribute>() != null).ToList();
+            var ownedMembers = members.Where(m => m.GetCustomAttribute<SiblingAttribute>() != null).ToList();
 
             foreach (var memberInfo in ownedMembers)
             {
@@ -118,13 +118,13 @@ namespace MantenseiLib.GetComponent
                 {
                     Type componentType = memberInfo.GetMemberType();
 
-                    // Owner自身（Self）からまず探す
-                    object component = ownerGameObject.GetComponent(componentType);
+                    // parent自身（Self）からまず探す
+                    object component = parentGameObject.GetComponent(componentType);
 
                     // なければ子階層（Children）から探す
                     if (!Exists(component))
                     {
-                        component = ownerGameObject.GetComponentInChildren(componentType);
+                        component = parentGameObject.GetComponentInChildren(componentType);
                     }
 
                     if (Exists(component))
@@ -134,14 +134,14 @@ namespace MantenseiLib.GetComponent
                 }
                 catch (Exception ex)
                 {
-                    Debug.LogError($"Error processing [OwnedComponent] member '{memberInfo.Name}' in '{monoBehaviour.GetType().Name}' on '{monoBehaviour.name}': {ex.Message}");
+                    Debug.LogError($"Error processing [Sibling] member '{memberInfo.Name}' in '{monoBehaviour.GetType().Name}' on '{monoBehaviour.name}': {ex.Message}");
                 }
             }
         }
 
-        private static void ProcessOwnedComponentMultiple(MonoBehaviour monoBehaviour, List<MemberInfo> members, GameObject ownerGameObject)
+        private static void ProcessSiblingMultiple(MonoBehaviour monoBehaviour, List<MemberInfo> members, GameObject parentGameObject)
         {
-            var ownedMembers = members.Where(m => m.GetCustomAttribute<OwnedComponentsAttribute>() != null).ToList();
+            var ownedMembers = members.Where(m => m.GetCustomAttribute<SiblingsAttribute>() != null).ToList();
 
             foreach (var memberInfo in ownedMembers)
             {
@@ -150,14 +150,14 @@ namespace MantenseiLib.GetComponent
                     Type componentType = memberInfo.GetMemberType();
                     Type elementType = componentType.IsArray ? componentType.GetElementType() : componentType;
 
-                    // Owner自身（Self）と子階層（Children）の両方から取得
+                    // parent自身（Self）と子階層（Children）の両方から取得
                     List<Component> componentList = new List<Component>();
 
                     // Self
-                    componentList.AddRange(ownerGameObject.GetComponents(elementType));
+                    componentList.AddRange(parentGameObject.GetComponents(elementType));
 
                     // Children
-                    componentList.AddRange(ownerGameObject.GetComponentsInChildren(elementType));
+                    componentList.AddRange(parentGameObject.GetComponentsInChildren(elementType));
 
                     // 重複を除去
                     componentList = componentList.Distinct().ToList();
@@ -170,22 +170,22 @@ namespace MantenseiLib.GetComponent
                 }
                 catch (Exception ex)
                 {
-                    Debug.LogError($"Error processing [OwnedComponents] member '{memberInfo.Name}' in '{monoBehaviour.GetType().Name}' on '{monoBehaviour.name}': {ex.Message}");
+                    Debug.LogError($"Error processing [Siblings] member '{memberInfo.Name}' in '{monoBehaviour.GetType().Name}' on '{monoBehaviour.name}': {ex.Message}");
                 }
             }
         }
 
         private static void ProcessStandardAttributes(MonoBehaviour monoBehaviour, List<MemberInfo> members)
         {
-            // [Owner]、[OwnedComponent]、[OwnedComponents] 以外の属性を処理
+            // [parent]、[Sibling]、[Siblings] 以外の属性を処理
             var standardMembers = members.Where(m =>
             {
-                var hasOwner = m.GetCustomAttribute<OwnerAttribute>() != null;
-                var hasOwnedComponent = m.GetCustomAttribute<OwnedComponentAttribute>() != null;
-                var hasOwnedComponents = m.GetCustomAttribute<OwnedComponentsAttribute>() != null;
+                var hasparent = m.GetCustomAttribute<ParentAttribute>() != null;
+                var hasSibling = m.GetCustomAttribute<SiblingAttribute>() != null;
+                var hasSiblings = m.GetCustomAttribute<SiblingsAttribute>() != null;
                 var hasGetComponent = m.GetCustomAttribute<GetComponentAttribute>() != null;
 
-                return !hasOwner && !hasOwnedComponent && !hasOwnedComponents && hasGetComponent;
+                return !hasparent && !hasSibling && !hasSiblings && hasGetComponent;
             }).ToList();
 
             foreach (var memberInfo in standardMembers)

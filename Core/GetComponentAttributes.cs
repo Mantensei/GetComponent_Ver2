@@ -44,27 +44,27 @@ namespace MantenseiLib
     /// 1コンポーネントにつき1つだけ許可される
     /// </summary>
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
-    public class OwnerAttribute : Attribute
+    public class ParentAttribute : Attribute
     {
 
     }
 
     /// <summary>
-    /// Owner配下のコンポーネントを1つ取得する属性
+    /// parent配下のコンポーネントを1つ取得する属性
     /// （Self | Children）
     /// </summary>
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
-    public class OwnedComponentAttribute : Attribute
+    public class SiblingAttribute : Attribute
     {
 
     }
 
     /// <summary>
-    /// Owner配下のコンポーネントを複数取得する属性（配列版）
+    /// parent配下のコンポーネントを複数取得する属性（配列版）
     /// （Self | Children）
     /// </summary>
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
-    public class OwnedComponentsAttribute : Attribute
+    public class SiblingsAttribute : Attribute
     {
 
     }
