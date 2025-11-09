@@ -41,7 +41,7 @@ namespace MantenseiLib
     /// <summary>
     /// 親オブジェクトへの参照を明示的にマークする属性
     /// [GetComponent(HierarchyRelation.Parent)] と同等
-    /// 1コンポーネントにつき1つだけ許可される
+    /// 同クラス内につき1つだけ許可される
     /// </summary>
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
     public class ParentAttribute : Attribute
@@ -51,7 +51,7 @@ namespace MantenseiLib
 
     /// <summary>
     /// parent配下のコンポーネントを1つ取得する属性
-    /// （Self | Children）
+    /// parent自身を含む子要素を取得（Self | Children）
     /// </summary>
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
     public class SiblingAttribute : Attribute
@@ -61,7 +61,7 @@ namespace MantenseiLib
 
     /// <summary>
     /// parent配下のコンポーネントを複数取得する属性（配列版）
-    /// （Self | Children）
+    /// parent自身を含む子要素を取得（Self | Children）
     /// </summary>
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
     public class SiblingsAttribute : Attribute
@@ -69,11 +69,18 @@ namespace MantenseiLib
 
     }
 
+    /// <summary>
+    /// コンポーネント取得時の階層関係
+    /// (HierarcheyRelation.Self | HierarchyRelation.Parent)など複数指定可能
+    /// </summary>
     [Flags]
     public enum HierarchyRelation
     {
+        /// <summary>自身</summary>
         Self = 1,
+        /// <summary>親</summary>
         Parent = 2,
+        /// <summary>子</summary>
         Children = 4,
 
         None = 0,
