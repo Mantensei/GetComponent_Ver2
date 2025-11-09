@@ -161,10 +161,7 @@ namespace MantenseiLib.GetComponent.Editor
 
         private bool HasGetComponentAttribute(MemberInfo member)
         {
-            return member.GetCustomAttribute<GetComponentAttribute>() != null
-                || member.GetCustomAttribute<ParentAttribute>() != null
-                || member.GetCustomAttribute<SiblingAttribute>() != null
-                || member.GetCustomAttribute<SiblingsAttribute>() != null;
+            return member.GetCustomAttribute<GetComponentAttribute>() != null;
         }
 
         private void ExecuteNormalization()

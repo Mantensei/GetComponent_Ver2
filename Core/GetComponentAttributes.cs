@@ -2,7 +2,6 @@
 
 namespace MantenseiLib
 {
-
     /// <summary>
     /// 指定した階層関係からコンポーネントを自動取得する属性
     /// </summary>
@@ -44,9 +43,9 @@ namespace MantenseiLib
     /// 同クラス内につき1つだけ許可される
     /// </summary>
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
-    public class ParentAttribute : Attribute
+    public class ParentAttribute : GetComponentAttribute
     {
-
+        public ParentAttribute() : base(HierarchyRelation.Parent) { }
     }
 
     /// <summary>
@@ -54,9 +53,9 @@ namespace MantenseiLib
     /// parent自身を含む子要素を取得（Self | Children）
     /// </summary>
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
-    public class SiblingAttribute : Attribute
+    public class SiblingAttribute : GetComponentAttribute
     {
-
+        public SiblingAttribute() : base(HierarchyRelation.Self | HierarchyRelation.Children) { }
     }
 
     /// <summary>
@@ -64,9 +63,10 @@ namespace MantenseiLib
     /// parent自身を含む子要素を取得（Self | Children）
     /// </summary>
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
-    public class SiblingsAttribute : Attribute
+    public class SiblingsAttribute : GetComponentAttribute
     {
-
+        public SiblingsAttribute() : base(HierarchyRelation.Self | HierarchyRelation.Children) { }
+        public override QuantityType quantity => QuantityType.Multiple;
     }
 
     /// <summary>
